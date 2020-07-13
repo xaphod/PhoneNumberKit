@@ -55,6 +55,12 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
+    
+    // Bool checker, GitHub issue #325
+    func testValidNumberBool() {
+        XCTAssert(phoneNumberKit.isValidPhoneNumber("6297062979", withRegion: "IN"))
+        XCTAssertFalse(phoneNumberKit.isValidPhoneNumber("202 00e 0000", withRegion: "US"))
+    }
 
     // Invalid american number, GitHub issue #9 by lobodin
     func testAmbiguousFixedOrMobileNumber() {
@@ -268,6 +274,58 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+15002555555")
             XCTAssertEqual(phoneNumber.countryCode, 1)
             XCTAssertEqual(phoneNumber.nationalNumber, 5002555555)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
+    
+    func testValidAENumberWithHinduArabicNumerals() {
+        let testNumber = "+٩٧١٥٠٠٥٠٠٥٥٠"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testValidAENumberWithMixedHinduArabicNumerals() {
+        let testNumber = "+٩٧١5٠٠5٠٠55٠"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testValidAENumberWithEasternArabicNumerals() {
+        let testNumber = "+۹۷۱۵۰۰۵۰۰۵۵۰"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testValidAENumberWithMixedEasternArabicNumerals() {
+        let testNumber = "+۹۷۱5۰۰5۰۰55۰"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
