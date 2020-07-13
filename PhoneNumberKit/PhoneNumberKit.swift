@@ -294,13 +294,13 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
-#if os(iOS) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
-        let networkInfo = CTTelephonyNetworkInfo()
-        let carrier = networkInfo.subscriberCellularProvider
-        if let isoCountryCode = carrier?.isoCountryCode {
-            return isoCountryCode.uppercased()
-        }
-#endif
+//#if os(iOS) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
+//        let networkInfo = CTTelephonyNetworkInfo()
+//        let carrier = networkInfo.subscriberCellularProvider
+//        if let isoCountryCode = carrier?.isoCountryCode {
+//            return isoCountryCode.uppercased()
+//        }
+//#endif
         let currentLocale = Locale.current
         if #available(iOS 10.0, *), let countryCode = currentLocale.regionCode {
             return countryCode.uppercased()
